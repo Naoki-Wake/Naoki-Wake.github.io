@@ -47,14 +47,14 @@
             const pos_x = pos[0]/4.0-0.5;
             const pos_y = pos[1]/4.0-0.5;
             const pos_new = [pos_x, pos_y];
-            out.textContent = pos_new.toString(); 
+            out.textContent = pos.toString(); 
             //out.textContent = pos_x.toString();
             // const angle = (data.state[angleKey] * 180.0) / Math.PI;
             // out.textContent = pos;
             // update positions of graphical elements
-            // robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
-            robot.setAttribute("x", "${pos_x}");
-            robot.setAttribute("y", "${pos_y}");
+            robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
+            //robot.setAttribute("x", "${pos_x}");
+            //robot.setAttribute("y", "${pos_y}");
             /**pole.setAttribute(
               "transform",
               `translate(${pos} 0) rotate(${angle} 0 0)`
