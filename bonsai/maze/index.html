@@ -46,9 +46,10 @@
             const pos_x = pos(0)/4.0-0.5;
             const pos_y = pos(1)/4.0-0.5;
             // const angle = (data.state[angleKey] * 180.0) / Math.PI;
-
+            out.textContent = pos_x;
             // update positions of graphical elements
             robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
+            robot.setAttribute("x", "${pos_x}");
             /**pole.setAttribute(
               "transform",
               `translate(${pos} 0) rotate(${angle} 0 0)`
@@ -183,13 +184,13 @@
       <text x="0.375" y="-0.34" font-size="0.1" stroke="black" text-anchor="middle" stroke-width="0.002" >Hole</text>
       <text x="-0.375" y="-0.34" font-size="0.1" stroke="black" text-anchor="middle" stroke-width="0.002" >Start</text>
 
-      <image
-        id="robot"
-        x="-0.5"
-        y="-0.5"
-        width="0.25"
-        height="0.25"
-        xlink:href="robot.png"
+      <rect
+      id="robot"
+      x="-0.5"
+      y="-0.5"
+      width="0.25"
+      height="0.25"
+      fill="blue"
       />
     </svg>
     <script language="JavaScript">
