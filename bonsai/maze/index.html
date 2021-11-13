@@ -8,7 +8,8 @@
        */
       const params = new URLSearchParams(window.location.search);
       const darkMode = params.get("_theme") === "dark";
-
+      const robot_svg = document.getElementById("robotsvg");
+      //robot_svg.setAttribute("transform", "rotate(45)");
       // optional overrides for parameter names
       const posKey = params.has("pos") ? params.get("pos") : "location";
       const angleKey = params.has("angle") ? params.get("angle") : "orientation";
@@ -37,28 +38,29 @@
             const str = JSON.stringify(data, null, 4);
             const out = document.getElementById("out");
             if (debug) {
-              //out.textContent = str;
+              out.textContent = str;
             }
 
             // read state out of message and convert units
             // 0 1 2 3 -> -0.5 -0.25 0.0 0.25
             const pos = data.state[posKey]
             
-            const pos_x = pos[0]/4.0;
-            const pos_y = pos[1]/4.0;
+            const pos_y = pos[0]/4.0;
+            const pos_x = pos[1]/4.0;
             const pos_new = [pos_x, pos_y];
-            out.textContent = pos.toString(); 
+            //out.textContent = pos.toString(); 
             //out.textContent = pos_x.toString();
             // const angle = (data.state[angleKey] * 180.0) / Math.PI;
             // out.textContent = pos;
             // update positions of graphical elements
-            robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
+            //robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
             //robot.setAttribute("x", "${pos_x}");
             //robot.setAttribute("y", "${pos_y}");
             /**pole.setAttribute(
               "transform",
               `translate(${pos} 0) rotate(${angle} 0 0)`
             );**/
+            robot.setAttribute("transform", `translate(${pos_x} ${pos_y}) rotate(180,-0.375,-0.375)`);
           },
           false
         );
@@ -190,13 +192,17 @@
       <text x="-0.375" y="-0.34" font-size="0.1" stroke="black" text-anchor="middle" stroke-width="0.002" >Start</text>
 
       <rect
-      id="robot"
+      id="robot_"
       x="-0.5"
       y="-0.5"
       width="0.25"
       height="0.25"
-      fill="blue"
+      fill="white"
       />
+      <g id="robot">
+      <circle cx="-0.375" cy="-0.375" r="0.08" fill="blue" />
+      <polygon points="-0.25,-0.375 -0.375,-0.45 -0.375,-0.3 -0.25,-0.375" fill="blue" />
+      </g>
     </svg>
     <script language="JavaScript">
       init();
