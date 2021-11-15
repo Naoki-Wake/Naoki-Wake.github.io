@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <script language="JavaScript">
+      /*
+       * Copyright: Microsoft 2019
+       *
+       * An example visualizer for use with Cart+Pole simulators.
+       */
+      const params = new URLSearchParams(window.location.search);
+      const darkMode = params.get("_theme") === "dark";
+      const robot_svg = document.getElementById("robotsvg");
+      //robot_svg.setAttribute("transform", "rotate(45)");
+      // optional overrides for parameter names
+      const posKey = params.has("pos") ? params.get("pos") : "location";
+      const angleKey = params.has("angle") ? params.get("angle") : "orientation";
+      /**const debug = params.has("debug")
+        ? params.get("debug") === "true"
+        : false;**/
+      const debug = true;
+      function init() {
+        const robot = document.getElementById("robot");
+        const out = document.getElementById("out");
+        if (debug) {
+          out.textContent = "Waiting...";
+        }
+
+        // adjust our colors based upon theme.
+        if (darkMode) {
+          document.body.style.backgroundColor = "#333";
+          document.body.style.color = "white";
+        }
+
+        window.addEventListener(
+          "message",
+          (event) => {
+            // convert message to formatted JSON text for display
+            const data = JSON.parse(event.data);
+            const str = JSON.stringify(data, null, 4);
+            const out = document.getElementById("out");
+            if (debug) {
+              out.textContent = str;
+            }
+
+            // read state out of message and convert units
+            // 0-1 -> 0-1
+            const pos = data.state[posKey]
+            const pos_x = pos[0];
+            const pos_y = pos[1];
+            const pos_new = [pos_x, pos_y];
+            //out.textContent = pos.toString(); 
+            //out.textContent = pos_x.toString();
+            const angle = data.state[angleKey];
+            // 0-2pi -> 0-360
+            const  angle_new = angle * 180 / Math.PI;
+            robot.setAttribute("transform", `translate(${pos_x} ${pos_y}) rotate(${angle_new},-0.375,-0.375)`);
+          },
+          false
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <pre id="out" style="display: box; position: absolute"></pre>
+    <svg
+      preserveAspectRatio="xMidYMid meet"
+      height="100%"
+      width="100%"
+      viewBox="-1 -1 2 2"
+    >
+      <line 
+        x1="-0.5" 
+        y1="-0.5" 
+        x2="-0.5" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="0.5" 
+        y1="-0.5" 
+        x2="0.5" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="-0.5" 
+        x2="0.5" 
+        y2="-0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="0.5" 
+        x2="0.5" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <circle cx="0.4" cy="0.4" r="0.1" fill="orange" />
+      <g id="robot">
+      <ellipse cx="-0.375" cy="-0.46" rx="0.08" ry="0.02" fill="gray" />
+      <ellipse cx="-0.375" cy="-0.29" rx="0.08" ry="0.02" fill="gray" />
+      <circle cx="-0.375" cy="-0.375" r="0.08" fill="blue" />
+      <polygon points="-0.25,-0.375 -0.375,-0.45 -0.375,-0.3 -0.25,-0.375" fill="blue" />
+      </g>
+    </svg>
+    <script language="JavaScript">
+      init();
+    </script>
+  </body>
+</html>
