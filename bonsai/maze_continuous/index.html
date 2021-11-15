@@ -52,7 +52,7 @@
             const angle = data.state[angleKey];
             // 0-2pi -> 0-360
             const  angle_new = angle * 180 / Math.PI;
-            robot.setAttribute("transform", `translate(${pos_x} ${pos_y}) rotate(${angle_new},-0.375,-0.375)`);
+            robot.setAttribute("transform", `translate(${pos_x} ${pos_y}) rotate(${angle_new},0,0)`);
           },
           false
         );
