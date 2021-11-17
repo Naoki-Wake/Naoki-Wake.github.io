@@ -4,12 +4,11 @@
       /*
        * Copyright: Microsoft 2019
        *
-       * An example visualizer for use with Cart+Pole simulators.
+       * An example visualizer for use with Maze simulators.
        */
       const params = new URLSearchParams(window.location.search);
       const darkMode = params.get("_theme") === "dark";
       const robot_svg = document.getElementById("robotsvg");
-      //robot_svg.setAttribute("transform", "rotate(45)");
       // optional overrides for parameter names
       const posKey = params.has("pos") ? params.get("pos") : "location";
       const angleKey = params.has("angle") ? params.get("angle") : "orientation";
@@ -47,8 +46,6 @@
             const pos_y = pos[0]/4.0;
             const pos_x = pos[1]/4.0;
             const pos_new = [pos_x, pos_y];
-            //out.textContent = pos.toString(); 
-            //out.textContent = pos_x.toString();
             const angle = data.state[angleKey];
             // number<Up = 0, Right = 1, Down = 2, Left = 3>
             var  angle_new = 0
@@ -68,15 +65,6 @@
               default:
                angle_new = 0;
             }  
-            // out.textContent = pos;
-            // update positions of graphical elements
-            //robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
-            //robot.setAttribute("x", "${pos_x}");
-            //robot.setAttribute("y", "${pos_y}");
-            /**pole.setAttribute(
-              "transform",
-              `translate(${pos} 0) rotate(${angle} 0 0)`
-            );**/
             robot.setAttribute("transform", `translate(${pos_x} ${pos_y}) rotate(${angle_new},-0.375,-0.375)`);
           },
           false
