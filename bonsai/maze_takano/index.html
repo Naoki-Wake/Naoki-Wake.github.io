@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <script language="JavaScript">
+      /*
+       * Copyright: Microsoft 2019
+       *
+       * An example visualizer for use with Maze simulators.
+       */
+      const params = new URLSearchParams(window.location.search);
+      const darkMode = params.get("_theme") === "dark";
+      // optional overrides for parameter names
+      const posKey = params.has("pos") ? params.get("pos") : "location";
+      /**const debug = params.has("debug")
+        ? params.get("debug") === "true"
+        : false;**/
+      const debug = true;
+      function init() {
+        const robot = document.getElementById("robot");
+        const out = document.getElementById("out");
+        if (debug) {
+          out.textContent = "Waiting...";
+        }
+
+        // adjust our colors based upon theme.
+        if (darkMode) {
+          document.body.style.backgroundColor = "#333";
+          document.body.style.color = "white";
+        }
+
+        window.addEventListener(
+          "message",
+          (event) => {
+            // convert message to formatted JSON text for display
+            const data = JSON.parse(event.data);
+            const str = JSON.stringify(data, null, 4);
+            const out = document.getElementById("out");
+            if (debug) {
+              out.textContent = str;
+            }
+
+            // read state out of message and convert units
+            // 0 1 2 3 -> -0.5 -0.25 0.0 0.25
+            const pos = data.state[posKey]
+            const pos_y = pos[0]/4.0;
+            const pos_x = pos[1]/4.0;
+            robot.setAttribute("transform", `translate(${pos_x} ${pos_y})`);
+          },
+          false
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <pre id="out" style="display: box; position: absolute"></pre>
+    <svg
+      preserveAspectRatio="xMidYMid meet"
+      height="100%"
+      width="100%"
+      viewBox="-1 -1 2 2"
+    >
+      <rect
+      id="block1"
+      x="0.25"
+      y="-0.5"
+      width="0.25"
+      height="0.25"
+      fill="orange"
+      />
+      <rect
+      id="block2"
+      x="-0.25"
+      y="0"
+      width="0.25"
+      height="0.25"
+      fill="orange"
+      />
+      <rect
+      id="block3"
+      x="-0.5"
+      y="0.25"
+      width="0.25"
+      height="0.25"
+      fill="orange"
+      />
+      <rect
+      id="block4"
+      x="0"
+      y="0.25"
+      width="0.25"
+      height="0.25"
+      fill="orange"
+      />
+      <line 
+        x1="-0.5" 
+        y1="-0.5" 
+        x2="-0.5" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.25" 
+        y1="-0.5" 
+        x2="-0.25" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="0" 
+        y1="-0.5" 
+        x2="0" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="0.25" 
+        y1="-0.5" 
+        x2="0.25" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="0.5" 
+        y1="-0.5" 
+        x2="0.5" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="-0.5" 
+        x2="0.5" 
+        y2="-0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="-0.25" 
+        x2="0.5" 
+        y2="-0.25" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="0" 
+        x2="0.5" 
+        y2="0" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="0.25" 
+        x2="0.5" 
+        y2="0.25" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <line 
+        x1="-0.5" 
+        y1="0.5" 
+        x2="0.5" 
+        y2="0.5" 
+        stroke="#000000"
+        stroke-width="0.01"
+      />
+      <text x="0.375" y="0.41" font-size="0.1" stroke="black" text-anchor="middle" stroke-width="0.002" >Goal</text>
+      <text x="0.375" y="-0.34" font-size="0.1" stroke="black" text-anchor="middle" stroke-width="0.002" >Hole</text>
+      <text x="-0.375" y="-0.34" font-size="0.1" stroke="black" text-anchor="middle" stroke-width="0.002" >Start</text>
+
+      <g id="robot">
+      <circle cx="-0.375" cy="-0.375" r="0.08" fill="blue" />
+      </g>
+    </svg>
+    <script language="JavaScript">
+      init();
+    </script>
+  </body>
+</html>
