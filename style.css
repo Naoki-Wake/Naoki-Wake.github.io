@@ -214,6 +214,13 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* Home: list of posts */
 
+.writing-description {
+  margin: 0 0 0.5rem;
+  color: var(--graphite);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
 .posts {
   list-style: none;
   margin: 0;
