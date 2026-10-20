@@ -343,6 +343,32 @@ a:hover { text-decoration-thickness: 2px; }
   color: var(--graphite);
 }
 
+/* Article sharing */
+.post-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--graphite);
+}
+.post-share a,
+.post-share button { color: inherit; }
+.post-share button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+.post-share a:hover,
+.post-share button:hover { color: var(--accent); }
+.share-status { flex-basis: 100%; }
+
 /* Footer */
 .site-footer {
   margin-top: 5rem;
