@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SharedKV-BT: fast typed decisions for behavior-tree agents | Naoki Wake</title>
-  <meta name="description" content="An introduction to SharedKV-BT: the behavior tree decides what the model may choose, the model ranks candidates with a shared KV cache, and an external check decides when to move on.">
+  <meta name="description" content="How SharedKV-BT started: combining behavior trees with typed decisions, and using agents for implementation and experiments.">
   <link rel="canonical" href="https://naokiwake.com/writing/sharedkv-bt.html">
   <meta property="og:title" content="SharedKV-BT: fast typed decisions for behavior-tree agents">
-  <meta property="og:description" content="The tree decides what the model may choose, and an external check decides when to move on.">
+  <meta property="og:description" content="How SharedKV-BT started: combining behavior trees with typed decisions, and using agents for implementation and experiments.">
   <meta property="og:url" content="https://naokiwake.com/writing/sharedkv-bt.html">
   <meta property="og:type" content="article">
   <meta name="theme-color" content="#fdfdfb" media="(prefers-color-scheme: light)">
@@ -31,37 +31,11 @@
         </header>
 
         <div class="prose">
-          <p>Our new paper, <a href="https://arxiv.org/abs/2610.07327">SharedKV-BT</a>, written with Justin Wagle, looks at a problem every agent runs into: making a chain of dependent decisions quickly, in the right order, and without trusting the model to say when the job is done.</p>
+          <p>This is an introduction to a paper I wrote recently. I’m still figuring out how to run experiments efficiently with agents, but for this paper I used them quite a bit for implementation and experiments.</p>
 
-          <h2>Why this is hard</h2>
-          <p>A robot cannot place an object before grasping it. A computer-use agent cannot paste a file before selecting it. Each decision depends on the stage of the task and on what actually happened in the environment.</p>
-          <p>Letting an LLM generate the next action as free text is flexible, but decoding token by token adds latency that grows with the output. A classifier is fast, but it picks from one fixed set of labels. Typed decisions sit in between: the model fills named fields, such as a skill and an object, by choosing from candidate lists. On their own, though, typed decisions don't know when a decision is needed, which candidates make sense at that moment, or whether the last action worked. Without that, an agent can act out of order, repeat what it already did, or stop because the model claimed success.</p>
+          <p>The idea came from <a href="https://arxiv.org/abs/2501.03968">an earlier paper I wrote on behavior trees</a>. I wondered whether I could combine that work with newer approaches to typed decisions, such as Jev. In thinking about how to design a framework that supports simple decisions, I wanted to explore what we could gain from using behavior trees (BTs), which are often used in robotics. I’m glad we were able to try it with several different kinds of agents.</p>
 
-          <h2>The idea</h2>
-          <p>SharedKV-BT splits the work three ways.</p>
-          <ul>
-            <li><strong>The behavior tree decides when to ask and what can be chosen.</strong> Each active node exposes only its own fields and candidates. In pick-and-place, the Acquire, Transport, and Deposit nodes each offer different skills and arguments.</li>
-            <li><strong>The model only ranks candidates.</strong> We encode the instruction and the observed state once, keep the key-value cache of that shared prefix, and score every candidate in a single batch. A candidate's score is the average log-probability of its own tokens, which avoids favoring short labels.</li>
-            <li><strong>An external check decides whether to move on.</strong> The model's own "done" output is recorded but never advances the task. Retries have a fixed budget.</li>
-          </ul>
-
-          <figure>
-            <a href="/writing/sharedkv-bt-fig1.png"><img src="/writing/sharedkv-bt-fig1.png" width="4107" height="1314" alt="Diagram of SharedKV-BT. Left: a behavior tree runs Acquire, Transport, and Deposit, and the Acquire stage loops through a decision, execution, and an external check. Right: the instruction and state are encoded once, and skill, object, and completion candidates are scored in parallel."></a>
-            <figcaption>The tree runs each stage as a bounded loop of decision, execution, and an external check. Inside a decision, the instruction and state are encoded once and the stage's candidates are scored in parallel. Figure from the paper (arXiv:2610.07327).</figcaption>
-          </figure>
-
-          <h2>What we found</h2>
-          <p>All numbers below use Qwen2.5-3B-Instruct on a single RTX 2080 Ti.</p>
-          <ul>
-            <li><strong>Speed.</strong> Against prompt-matched constrained autoregressive decoding, one decision took 99.8 ms instead of 413.8 ms on robot stacking (4.15&times;), 121.4 ms instead of 286.0 ms on kitchen navigation (2.36&times;), and 134.2 ms instead of 318.8 ms on a Windows Clock task (2.38&times;).</li>
-            <li><strong>Accuracy from node-local options.</strong> On 120 saved pick-and-place states, offering only the active node's options gave the correct skill-and-object decision in 113 states (94%), against 90 (75%) when every stage's options were offered at once. In closed loop, the node-local version finished 18 of 30 four-object episodes. The global version finished none.</li>
-            <li><strong>Order and completion.</strong> Replaying identical scores on 15 stacking states, full behavior-tree control made no errors. Without stage gating, the policy chose DONE before grasping or placing in 10 states. Without the external check, the model's completion claim ended the task early in 10 states.</li>
-          </ul>
-
-          <h2>Limits</h2>
-          <p>The experiments run in simulation and on three fixed Windows tasks, so they don't show generalization to new tasks or real hardware. The method assumes the behavior tree, candidates, skills, and checks are defined in advance. Saying "none of these" is still open: candidate scores alone were not enough to reject invalid options reliably. And the speedup depends on the setup. With only two field-candidate pairs, shared-KV scoring was slower than decoding (0.51&times;), because copying the cache cost more than it saved.</p>
-
-          <p>The paper has the full method, ablations, and failure cases: <a href="https://arxiv.org/abs/2610.07327">arXiv:2610.07327</a>.</p>
+          <p>The <a href="https://arxiv.org/abs/2610.07327">paper is linked here</a>, and I think an LLM could explain its contents in detail if you asked, so I won’t go into the details here.</p>
         </div>
       </article>
     </main>
