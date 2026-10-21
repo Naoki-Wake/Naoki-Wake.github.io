@@ -369,6 +369,94 @@ a:hover { text-decoration-thickness: 2px; }
 .post-share button:hover { color: var(--accent); }
 .share-status { flex-basis: 100%; }
 
+/* Ask this paper */
+.ask-toggle {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+.ask-toggle:hover { text-decoration-thickness: 2px; }
+
+.ask-panel {
+  margin: 0.75rem 0 0.25rem;
+  padding: 1rem 1.125rem;
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+.ask-summary { margin: 0 0 0.875rem; }
+
+.ask-suggest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.875rem;
+}
+.ask-suggest button,
+.ask-form button {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+.ask-suggest button:hover,
+.ask-form button:hover { border-color: var(--accent); color: var(--accent); }
+.ask-suggest button:disabled { opacity: 0.5; cursor: default; }
+
+.ask-turn { margin: 0 0 0.875rem; }
+.ask-q {
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+}
+.ask-a { white-space: pre-wrap; }
+.ask-pending { color: var(--graphite); }
+.ask-error { color: var(--graphite); font-style: italic; }
+.ask-source {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+
+.ask-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+.ask-form textarea {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.ask-form button:disabled { opacity: 0.5; cursor: wait; }
+.ask-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+
 /* Footer */
 .site-footer {
   margin-top: 5rem;

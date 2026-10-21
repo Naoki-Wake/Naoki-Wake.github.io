@@ -1,0 +1,38 @@
+{
+  "arxiv": "2402.05929",
+  "title": "An interactive agent foundation model",
+  "summary": "The paper argues that foundation models often hallucinate partly because they are not grounded in the environments where agents act, and that frozen per-modality submodules limit cross-modal learning. It proposes an Interactive Agent Foundation Model that jointly pre-trains a vision encoder and a language/action transformer to predict masked visual tokens, language tokens, and action tokens on robotics and gaming data. The 277M parameter model is fine-tuned and evaluated in robotics, gaming, and healthcare, where agent pre-training improved action prediction over training from scratch and transferred positively to the unseen healthcare domain.",
+  "faq": [
+    {
+      "q": "What is an Interactive Agent Foundation Model, and why build one?",
+      "a": "It is a single model that takes text, visual data, and actions as input and is pre-trained to predict tokens in all three modalities, so that it can interact with humans and its environment. The authors posit that large foundation models hallucinate partly because they are trained on internet data rather than in physical or virtual environments, and that systems built from frozen pre-trained submodules inherit their errors. Pre-training jointly within agent environments is presented as a step toward generalist, action-taking, multimodal systems.",
+      "source": "Abstract, Sec. 1, Fig. 1"
+    },
+    {
+      "q": "What is the model architecture?",
+      "a": "The visual encoder is initialized from CLIP ViT-B16 and the action and language transformer from OPT-125M, connected by a trained linear layer that maps visual embeddings into the transformer's token space. The visual encoder uses divided space-time attention with learned temporal attention layers, and previous actions and frames are fed in through a sliding window of the previous M steps. Because the checkpoints are relatively small, the whole model is trained jointly rather than keeping submodules frozen.",
+      "source": "Sec. 4.1, Appendix A, Eq. (1)"
+    },
+    {
+      "q": "How is the model pre-trained across modalities?",
+      "a": "Each sample contains a text instruction, video frames, and action tokens, and the loss combines causal language modeling, masked image autoencoding with 75% of image patches masked, and action modeling that predicts each action token from prior text, visual, and action tokens. Actions are represented by expanding the language model vocabulary with special agent tokens, for example binned end-effector translations for robotics and button and joystick tokens for games. Robotics samples use 4 frames because the tasks are Markovian, while gaming samples use 9 frames because the games are partially observable.",
+      "source": "Sec. 4.2, Eqs. (2)-(5), Fig. 4, Sec. 6.1"
+    },
+    {
+      "q": "What results did the model achieve?",
+      "a": "On CALVIN, the pre-trained model reached an average length of 1.127 with a 1-step success of 64.8, compared with 0.31 for MCIL and 0.214 when trained from scratch, while using 1% of the data according to the authors. On Language-Table, success was 42.0 versus 40.0 from scratch, and for gaming action prediction the pre-trained and fine-tuned model reached BLEU-4 of 0.272 on Minecraft and 0.411 on Bleeding Edge versus 0.174 and 0.238 from scratch. In healthcare, RASS score prediction accuracy was 95.7 for the agent pre-trained model versus 92.6 for the unfrozen CLIP + OPT baseline and 55.4 for the frozen baseline.",
+      "source": "Sec. 6.2-6.4, Tables 1, 2, 4"
+    },
+    {
+      "q": "What are the limitations of the model?",
+      "a": "On Language-Table, the model was outperformed by other models such as Brohan et al. (2023), which the authors attribute to using less pre-training data. In healthcare, agent pre-training improved action recognition but did not improve text generation, with perplexity of 106.3 versus 93.3 for the frozen CLIP + OPT baseline. The authors also state that the model should not be deployed on real robots without more training and additional safety filters, and that the healthcare models are not medical devices and have not been rigorously tested in live settings.",
+      "source": "Sec. 6.2.1, Table 4, Sec. 9"
+    },
+    {
+      "q": "What data and compute were used for pre-training?",
+      "a": "Pre-training used the full training sets of Language-Table, CALVIN, Minecraft, and Bleeding Edge, totaling 13,416,484 frames, with gaming videos labeled with instructions by GPT-4V. Training ran for 100 epochs with a linear warmup cosine learning rate schedule starting at 0.0001, on 12 nodes of 16 V100 GPUs for 175 hours. Healthcare fine-tuning used 20 epochs on 4 16GB V100 GPUs with a fixed learning rate of 4e-5, and the authors state that they plan to release code and models.",
+      "source": "Sec. 1, Sec. 5.2, Sec. 6.1, Sec. 6.4"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

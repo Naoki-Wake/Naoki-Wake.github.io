@@ -1,0 +1,38 @@
+{
+  "arxiv": "2504.04939",
+  "title": "A taxonomy of self-handover",
+  "summary": "Self-handover, transferring an object between one's own hands, is common in everyday activity but has received little systematic study. The authors annotated over 12 hours of egocentric cooking video from 21 participants and built a taxonomy that classifies self-handovers by which hand performs the subsequent task and what that task focuses on. They found that self-handover is a coordinated action that prepares the next step, and showed that GPT-4o could classify self-handover types from video clips with 86% accuracy.",
+  "faq": [
+    {
+      "q": "What is self-handover and why study it?",
+      "a": "The paper defines self-handover as the transition from holding an object with one hand to either passing it to the other hand or engaging both hands in manipulation, without intermediate placement. It argues that this action restructures the spatial configuration of hands, objects, and surroundings and acts as a hinge between subtasks. While existing bimanual taxonomies treat self-handover as a single category, its specific patterns and functions had not been examined, and understanding them could inform adaptive dual-arm robots.",
+      "source": "Sec. I, Sec. II-C"
+    },
+    {
+      "q": "How is the taxonomy organized?",
+      "a": "Self-handovers are classified along two axes: which hand performs the subsequent task (the transferring hand, the receiving hand, or both) and what the task focuses on (the handed-over object, another object, or the hand itself). Observed cases fall into Adjusting Grip, Simplifying the Subsequent Task, Performing a Bimanual Task, Facilitating a Hand-Centered Task, and Freeing the Hand for a New Task. Freeing the Hand is marked as a passive type because the transferred object receives little attention in the next task, while the others are active types in which the object plays a central role.",
+      "source": "Sec. III, Fig. 1"
+    },
+    {
+      "q": "How were the cooking videos collected and analyzed?",
+      "a": "Twenty-one right-handed, non-professional adults each cooked miso soup and either Kinpira Gobo or Hui Guo Rou in a kitchen studio, recorded with a head-mounted GoPro at 1920 x 1080 and 30 fps, for a total of 46,236 seconds (771 minutes). Videos were downsampled to 640 x 360 and split into overlapping 1-second segments with a 0.5-second step; 15 evenly sampled frames per segment were tiled into one image and given to GPT-4o to flag candidate self-handovers. The authors then manually reviewed all candidates to remove false positives and developed and applied the taxonomy during this review.",
+      "source": "Sec. IV-A, IV-B, IV-C, Fig. 4, Fig. 5"
+    },
+    {
+      "q": "What did the analysis find, and how well did the VLM classify self-handover types?",
+      "a": "The analysis yielded 363 clips: 178 Performing a Bimanual Task, 136 Freeing the Hand for a New Task / Simplifying the Subsequent Task (merged because Freeing the Hand rarely occurred in isolation), 29 Facilitating a Hand-Centered Task, and 20 Adjusting Grip. For classification, 20 clips per category plus 20 negative clips of bimanual actions without self-handover were given to GPT-4o with a taxonomy-aligned prompt. Overall accuracy was 86%, although performance for the Negative class was the lowest at 70%.",
+      "source": "Sec. IV-D, IV-E, Table I, Fig. 6"
+    },
+    {
+      "q": "What limitations does the paper note?",
+      "a": "The VLM classification is described as a preliminary experiment, and the authors expect that dedicated models trained on large annotated datasets could reach higher accuracy. GPT-4o sometimes hallucinated, describing handovers in negative-class clips that showed none, in some cases apparently inferring them from visible objects such as chopsticks. Category boundaries are also not strict: Freeing the Hand and Simplifying the Subsequent Task often describe the same behavior from different hands' perspectives and were merged for annotation.",
+      "source": "Sec. III-E, Sec. IV-D, Sec. V-A, Fig. 8"
+    },
+    {
+      "q": "What is required to run the VLM-based classification?",
+      "a": "The approach uses GPT-4o and requires no task-specific training. Each clip is cropped to a bounding box enclosing both hands, estimated from hand landmarks detected by a third-party model, and 15 evenly sampled frames are tiled horizontally in temporal order into a single image. A structured prompt lists the taxonomy types plus a non-handover type and asks the model to choose a type only when a self-handover is clearly observed and to justify its choice.",
+      "source": "Sec. IV-E, Fig. 7"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

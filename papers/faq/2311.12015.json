@@ -1,0 +1,38 @@
+{
+  "arxiv": "2311.12015",
+  "title": "GPT-4V(ision) for robotics: Multimodal task planning from human demonstration",
+  "summary": "The paper addresses how to turn a single video of a human performing a task into an executable robot program using off-the-shelf models without additional training. It proposes a pipeline in which GPT-4V describes the demonstration and scene, GPT-4 produces a symbolic task plan, and vision modules ground that plan in the video to extract affordances such as grasp types, waypoints, and arm postures. Real robots executed tasks from one-shot demonstrations with end-to-end success of 85-95% in the tested operations, while a quantitative test on cooking videos revealed hallucinations in GPT-4V that motivate human supervision.",
+  "faq": [
+    {
+      "q": "What problem does this paper address, and why does it matter?",
+      "a": "The paper builds a multimodal task planner that converts human video demonstrations and/or text instructions into robot-executable task plans using off-the-shelf GPT-4V and GPT-4. The authors argue that off-the-shelf models can be adapted to different robot hardware and scenarios simply by modifying prompts, which removes the need for extensive robot data collection and model retraining. This improves reusability in research and eases transfer to industrial applications.",
+      "source": "Sec. I, Fig. 1"
+    },
+    {
+      "q": "How does the symbolic task planner turn a video into a task plan?",
+      "a": "It has three components. A video analyzer feeds GPT-4V five frames sampled at regular intervals and produces a one-sentence human-style instruction, which the user can check and edit. A scene analyzer gives GPT-4V the instruction and the first frame to produce an environmental description (relevant objects, graspable properties, spatial relations), and a GPT-4 task planner then decomposes the instruction into a sequence of robot actions defined in a pre-prompt (e.g., Grab, MoveHand, Release, PickUp, Put, Rotate, Slide, MoveOnSurface).",
+      "source": "Sec. III-A, Figs. 2-4, Table I"
+    },
+    {
+      "q": "How does the affordance analyzer ground the plan in the video?",
+      "a": "The video is split into clips, and a YOLO-based hand detector and grasp classifier label clips as grasp or release clips depending on whether an object is held in the first and last frames. The open-vocabulary detector Detic searches for the objects named by the task planner, and the candidate closest to the hand is taken as the manipulated object, with the moment of minimum hand-object distance used as the grasp or release time. These moments anchor the task sequence to the video so that affordances such as approach directions, grasp types, waypoints, rotation axes, and upper-limb postures can be extracted; GPT-4V is not used in these vision components.",
+      "source": "Sec. III-B, Figs. 5-6"
+    },
+    {
+      "q": "What quantitative results did the paper report?",
+      "a": "On 58 manually annotated first-person cooking videos, GPT-4V's video analyzer produced a correct instruction in only 20.7% of cases. Given correct instructions, the task plan's normalized Levenshtein similarity to ground truth was 0.76 for the task planner alone, 0.87 with human feedback, and 0.90 with the scene analyzer plus feedback. In end-to-end tests on a SEED-noid robot with 20 demonstrations each, juice relocation succeeded in 19/20 executions and drawer opening in 17/18, which the authors summarize as 85-95% end-to-end performance.",
+      "source": "Sec. IV-B, Fig. 10, Tables II-III, Sec. V"
+    },
+    {
+      "q": "What limitations do the authors acknowledge?",
+      "a": "GPT-4V showed hallucinations (illusory objects, illusory motions, and visually difficult cases) in cluttered kitchen videos with camera self-motion, and sampling only five frames can miss critical actions, so human supervision remains important. Because grounding is computed only at grasp and release moments, the extracted affordance information is inherently limited for longer steps. The pipeline also mainly uses object relationships for pre- and post-conditions, and its success depends heavily on prompt design.",
+      "source": "Sec. IV-B1, Sec. V"
+    },
+    {
+      "q": "What hardware and resources were used, and is anything available for reproduction?",
+      "a": "Qualitative tests used a Nextage robot with 6-DOF arms and a Fetch Mobile Manipulator with a 7-DOF arm, each fitted with a Shadow Dexterous Hand Lite, while end-to-end quantitative tests used a SEED-noid robot with a 1-DOF gripper. Demonstrations were recorded with a depth channel, and execution relied on the authors' in-house control system with grasping and manipulation skill libraries and Detic-based object localization from a head-mounted RGB-D camera. The GPT-4V/GPT-4 prompts and experimental results are published on the project page at https://microsoft.github.io/GPT4Vision-Robot-Manipulation-Prompts/.",
+      "source": "Abstract, Sec. IV-A, Sec. IV-B3"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

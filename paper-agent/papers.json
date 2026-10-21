@@ -1,0 +1,12 @@
+[
+  {"arxiv": "2401.03568", "title": "Agent AI: Surveying the horizons of multimodal interaction", "role": "Co-author; wrote the robotics section."},
+  {"arxiv": "2311.12015", "title": "GPT-4V(ision) for robotics: Multimodal task planning from human demonstration", "role": "First author."},
+  {"arxiv": "2304.03893", "title": "ChatGPT empowered long-step robot control in various environments: A case application", "role": "First author."},
+  {"arxiv": "2402.05929", "title": "An interactive agent foundation model", "role": "Co-author; intern advisor."},
+  {"arxiv": "2103.02201", "title": "Semantic constraints to represent common sense required in household actions for multimodal learning-from-observation robot", "role": "Second author."},
+  {"arxiv": "2007.08705", "title": "Verbal focus-of-attention system for learning-from-observation", "role": "First author."},
+  {"arxiv": "2610.07327", "title": "SharedKV-BT: Node-local typed decisions for behavior-tree agents", "role": "First author."},
+  {"arxiv": "2501.03968", "title": "VLM-driven behavior tree for context-aware task planning", "role": "First author."},
+  {"arxiv": "2504.04939", "title": "A taxonomy of self-handover", "role": "First author."},
+  {"arxiv": "2408.17422", "title": "Open-vocabulary action localization with iterative visual prompting", "role": "First author."}
+]

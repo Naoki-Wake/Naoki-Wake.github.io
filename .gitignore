@@ -1,0 +1,5 @@
+paper-agent/corpus-src/
+paper-agent/worker/src/corpus.js
+paper-agent/worker/node_modules/
+paper-agent/worker/.wrangler/
+paper-agent/worker/.dev.vars

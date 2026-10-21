@@ -1,0 +1,38 @@
+{
+  "arxiv": "2501.03968",
+  "title": "VLM-driven behavior tree for context-aware task planning",
+  "summary": "Behavior trees (BTs) make robot programs modular and readable, and language models have been used to generate them, but branching on what the robot actually sees has not been addressed. The paper proposes a framework in which a vision-language model (GPT-4o) generates BTs containing visual condition nodes written as free-form text, and another VLM process evaluates those conditions against the robot's egocentric images during execution, with an interactive interface for visualizing and editing the BT. In a real-world cafe scenario, the system cleared cups from a table and branched correctly on whether a cup contained liquid in 8/10 trials.",
+  "faq": [
+    {
+      "q": "What is a 'self-prompted visual condition' and why is it useful?",
+      "a": "When generating a BT, the VLM writes condition nodes as free-form text, such as 'The table is clear of cups.' or 'cup contains liquid'. During robot execution, the system inserts this text into a prompt together with the robot's current egocentric image and asks a VLM to judge it, then selects the next BT node from the answer. This lets the robot switch behavior based on real-world visual context without a task-specific vision model for each condition.",
+      "source": "Sec. I, Sec. V-A, Fig. 1, Fig. 8"
+    },
+    {
+      "q": "How is the VLM prompted to generate a BT?",
+      "a": "A pre-prompt is concatenated in conversational format from a role prompt, an environment prompt describing the scene and map as structured text, an output prompt, an action prompt listing robot actions at BT-node granularity, and an example prompt, and the user's instruction is appended. The output is JSON with a main_sequence, an ultimate_goal expressed as a visual state, and where_to_check_goal, compiled into a tree that retries the main sequence until GoalCheck confirms the goal. The conversation history is kept in memory so that the BT can be revised from user feedback.",
+      "source": "Sec. III, Sec. III-A to III-E, Fig. 2 to Fig. 5"
+    },
+    {
+      "q": "What is the difference between the VisualCheck and GoalCheck nodes?",
+      "a": "VisualCheck invokes a VLM immediately after the preceding action, without moving the robot base, and returns true if the stated situation is confirmed. GoalCheck verifies completion of the whole BT and takes both the visual goal and the location where it should be checked. The authors introduced two functions because completion may not be verifiable where the last action happened; for example, after throwing cups away the robot must return to the table to confirm that none remain.",
+      "source": "Sec. III-D, Table I"
+    },
+    {
+      "q": "How well did the system perform on the real robot?",
+      "a": "In a cafe scenario with two cups on a table, one containing coffee and one empty, the system generated a valid BT in 10/10 trials, removed all cups in 10/10, branched correctly in 8/10, and placed all cups in the trash bin in 10/10. Both failures occurred when GPT-4o judged an empty cup, slightly stained from previously containing coffee, as containing liquid, so the robot tried to pour it into the container. The authors attribute this to the VLM's image recognition, since the image had no occlusion and contained the information needed for a correct judgment by human eyes.",
+      "source": "Sec. V-B, Table III"
+    },
+    {
+      "q": "What limitations does the paper state?",
+      "a": "The study does not cover BT generation across arbitrary granularities of robot actions; the authors assume this can be handled by using action nodes at a granularity similar to Table I and remapping them to each robot's own execution units. The success rate of visual conditions depends on the VLM's performance, which the authors suggest could be mitigated by combining it with additional object recognition models. Collecting the environmental data used in the prompts is also outside the paper's scope.",
+      "source": "Sec. III-B, Sec. VI"
+    },
+    {
+      "q": "What is needed to reproduce or adapt the system?",
+      "a": "The system uses GPT-4o both to generate BTs and to evaluate visual conditions, and a web-based builder based on the Mistreevous library provides a chat window (text or voice), a BT visualization window, and a text editing window. Adapting it requires adjusting the action prompt for a new scenario, the mapping from BT nodes to robot action sequences for new hardware, and the environment prompt for a new environment (Table II). The experiments used a SEED-noid robot (THK) with 6-DOF dual arms and one-DOF grippers, and sample code is available at https://github.com/microsoft/scene-aware-robot-BT-planner.",
+      "source": "Abstract; Sec. III-F, Sec. IV, Sec. V-B, Table II, Table V"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

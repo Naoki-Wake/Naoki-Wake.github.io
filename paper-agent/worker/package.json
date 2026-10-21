@@ -1,0 +1,13 @@
+{
+  "name": "paper-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "python3 ../scripts/build_corpus.py",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.36.0"
+  }
+}

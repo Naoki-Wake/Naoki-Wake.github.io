@@ -1,0 +1,38 @@
+{
+  "arxiv": "2007.08705",
+  "title": "Verbal focus-of-attention system for learning-from-observation",
+  "summary": "Learning-from-observation (LfO) systems must find when and where an object is grasped and released in a human demonstration, but real demonstrations contain unrelated objects and unrelated body movements. The paper proposes a verbal focus-of-attention (FoA) system that uses the demonstrator's spoken instruction to build spatial and temporal filters: the named target object confines where to look, and hand-object distances inside those areas confine when to look. Compared with an end-to-end action localization network (BSN), the verbal FoA was less affected by both spatial and temporal noise when estimating grasp and release timings.",
+  "faq": [
+    {
+      "q": "What problem does the verbal focus-of-attention system address, and why does it matter for robot teaching?",
+      "a": "In LfO, a task-model encoder converts a human demonstration into task models for a robot, and previous encoders assumed access to the position and time of the manipulation. The paper defines the problem as outputting the timings and locations of grasping and releasing in a demonstration that contains spatial noise (unrelated objects) and temporal noise (unrelated body movements before and after the manipulation). Inspired by how verbal instructions guide a human observer's visual attention, the system uses speech to filter out this noise so that LfO can be deployed in realistic, noisy environments.",
+      "source": "Abstract; Sec. I"
+    },
+    {
+      "q": "How does the system turn a spoken instruction into spatial and temporal filters?",
+      "a": "A language parser (based on the Stanford parser) extracts task-related verbs from a predefined verb set, the target object as the accusative object of those verbs, and a color attribute from adjectival modifiers; for 'Pick up a red cup and place it on the shelf.' it outputs [pick, place], 'cup', and 'red'. An object selector then keeps only detections from a generic object detector that match the target name and color, mapping them into a voxel space of 0.15 m voxels as the target-object-location FoA. Finally, a grasp-release detector finds the timings of grasp and release within those voxels, which form the grasp-release FoA.",
+      "source": "Sec. III-A, III-B, Fig. 2, Fig. 3"
+    },
+    {
+      "q": "How are the grasp and release timings detected?",
+      "a": "For each voxel containing the target object, the detector finds the time at which the left or right hand is closest to the object position (Eq. 1), and ignores voxels where this minimum distance exceeds 0.2 m. It then compares the averaged existence probability of the object before and after that time, using a criterion of 0.5: if the object exists before but not after, the time is a grasp; if it does not exist before but exists after, it is a release; otherwise it is treated as unrelated. The detected timings are passed to the task-model encoder with the voxel index and the laterality of the manipulating hand.",
+      "source": "Sec. III-B-3, Eq. 1, Fig. 4"
+    },
+    {
+      "q": "What evidence shows that the verbal FoA is robust to noise?",
+      "a": "The authors compared timing-estimation errors against manually labeled grasp and release times for the verbal FoA and the boundary sensitive network (BSN), using the same RGB inputs and a target-object name from ten YCB household items. Of 400 noise-free pick-place videos, 376 were used for training BSN and fine-tuning the object detector, and 24 were used for testing, together with 24 videos with spatial noise and 24 with temporal noise (72 test videos in total). BSN estimates were compromised by temporal noise and shifted to earlier times, whereas the verbal FoA was less affected by both types of noise; the results are reported as error histograms rather than a single summary score.",
+      "source": "Sec. IV, Sec. V-A, Fig. 6, Fig. 7"
+    },
+    {
+      "q": "What limitations do the authors acknowledge?",
+      "a": "The system relies on accurate estimation of the object, the verbal instruction, and human poses, and the object detector failed to detect the target object in parts of the image sequence in a few cases. Task types are recognized through a database associating verbs with tasks, which may be insufficient because the same verb can imply different tasks depending on the object, for example opening a door versus opening a drawer. The current implementation supports only color as an attribute and assumes that the manipulation is associated with verbs and that the target object does not move without human intervention.",
+      "source": "Sec. III-B, Sec. V-A, Sec. V-B"
+    },
+    {
+      "q": "What hardware and software did the implemented system use?",
+      "a": "All modules were implemented on ROS. An Azure Kinect sensor mounted on the robot head captured RGB-D images at a nominal 5 Hz and human skeleton poses at a nominal 15 Hz, and speech from a wireless microphone was processed with ego noise reduction, voice activity detection, and a cloud speech recognition service. Object detection used an off-the-shelf model detecting 42 household objects, and the robot executions used the Seednoid humanoid robot with a pair of 7-DOF arms and a movable waist, controlled by position control with an IK solver.",
+      "source": "Sec. III, Sec. III-B, Sec. III-C, Fig. 5"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

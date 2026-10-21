@@ -1,0 +1,38 @@
+{
+  "arxiv": "2103.02201",
+  "title": "Semantic constraints to represent common sense required in household actions for multimodal learning-from-observation robot",
+  "summary": "Learning-from-observation (LfO) robots have mostly modeled only the physical contact constraints between a tool and its environment, which misses the common sense needed for household actions such as keeping a mop on the floor or not spilling a cup. The paper derives the set of contact states and transitions for translation and rotation using screw theory and the Kuhn-Tucker theory, introduces semantic constraints to encode common sense, and organizes frequent constraint patterns found in cooking recordings and YouTube videos into physical, semantic, and multistage task groups. A preliminary experiment showed that task groups can be recognized from crowd-sourced textual instructions with a mean five-fold cross-validation accuracy of 77%.",
+  "faq": [
+    {
+      "q": "What problem does this paper address, and why does it matter?",
+      "a": "The paper targets service robots that learn household actions by observing demonstrations, motivated by the need to support elderly people in senior residences and their own homes. Household actions require common sense that arises from the purpose of an action, for example a mop must keep contact with a window while wiping, but previous LfO research mainly considered only observable physical constraints. The authors propose describing this common sense explicitly as semantic constraints.",
+      "source": "Sec. 1, Sec. 2.1"
+    },
+    {
+      "q": "How are contact states between a tool and its environment represented?",
+      "a": "Admissible displacements of a rigid object are formulated with screw theory, and the admissible axis directions are depicted as regions on a Gaussian sphere. Solving the simultaneous contact inequalities with the Kuhn-Tucker theory yields characteristic solution regions, which the authors group into translation states (NC, PC, TR, OT, PR, OP, FC) and rotation states (NR, RT, SP, OS, RV, OR, FR). For example, a half-open drawer is labeled (PR, FR) and a fully closed drawer (OP, FR).",
+      "source": "Sec. 3, Sec. 4.1, Figs. 1-5"
+    },
+    {
+      "q": "What are semantic constraints and task groups?",
+      "a": "Semantic constraints express common-sense tips, or hidden human intentions, as imaginary constraints added on top of physical ones, such as a semantic ping that keeps a liquid-filled cup aligned with gravity, a semantic wall that keeps a wiping tool on the surface, or a semantic hinge for pouring. A task group is a frequently appearing sequential pattern of physical and/or semantic state transitions. The authors extracted physical (e.g., Relocation, Drawer, Burner), semantic (e.g., Wiping, Peeling, Pouring, Holding), and multistage (Cutting, Flipping) task groups from miso soup and beef stew cooking recordings and 80 YouTube videos.",
+      "source": "Sec. 4.2, Sec. 5, Tables 1-7, Figs. 7-11"
+    },
+    {
+      "q": "How well could task groups be recognized from language?",
+      "a": "The authors collected textual descriptions of 20 room-cleaning actions recorded from first- and third-person views (40 videos) through Amazon Mechanical Turk, and trained a random forest classifier on word2vec sentence vectors. Five-fold cross-validation repeated 100 times gave a mean accuracy of 77% (0.92% standard deviation). The authors interpret this as evidence that task groups involving both physical and semantic constraints can be recognized from linguistic instructions.",
+      "source": "Sec. 6.1-6.3, Table 8, Figs. 15-16"
+    },
+    {
+      "q": "What limitations does the paper acknowledge?",
+      "a": "Semantic constraints are described as difficult, if not impossible, to obtain from observation alone, and the language-based recognition was a small-scale preliminary experiment with a relatively small dataset limited to house cleaning. The analysis considers only pure translation or pure rotation, not combined motions, and some theoretically possible transitions (NC-TR, NC-PR, PC-TR, PC-PR, and TR-PR) were not observed in the videos. Non-manipulative applications such as navigation are outside the scope of the study.",
+      "source": "Sec. 2, Sec. 3.1, Sec. 5.4, Sec. 6.3, Sec. 7"
+    },
+    {
+      "q": "What was required to build the textual instruction dataset and classifier?",
+      "a": "One author performed 20 representative cleaning actions, selected with reference to a Japanese cleaning agency's service list, recorded from two perspectives. The actions were split into four groups of five, forming eight video sets, and ten crowd workers per set each wrote exactly three different sentences per video. Sentences were lowercased and averaged over a third-party pre-trained word2vec model, then classified with random forests.",
+      "source": "Sec. 6.1.1, Sec. 6.1.2, Sec. 6.2, Eq. (6)"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}
