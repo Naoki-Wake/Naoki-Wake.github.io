@@ -1,0 +1,38 @@
+{
+  "arxiv": "2408.17422",
+  "title": "Open-vocabulary action localization with iterative visual prompting",
+  "summary": "Video action localization usually requires annotated training data, which makes adding new action labels costly. The paper proposes T-PIVOT, a training-free method that tiles sampled video frames with index labels into one image, asks an off-the-shelf vision-language model (GPT-4o) which frame is closest to the start or end of a free-text action, and iteratively narrows the sampling window around the chosen frame. It reached 60.1% mean-over-frames on the Breakfast Dataset, above a uniform-split baseline though below learning-based methods, and an average mAP of 25.8 on THUMOS14, the best among the compared zero-shot methods.",
+  "faq": [
+    {
+      "q": "What problem does this paper solve and why does it matter?",
+      "a": "The paper addresses open-vocabulary video action localization: finding the start and end times of an action described by free text in a long video. Existing learning-based methods need labeled data and retraining whenever new labels are added. The proposed method uses an off-the-shelf VLM without any training or data collection, which the authors see as useful for video annotation and for robot teaching, where human demonstrations must be segmented into actions.",
+      "source": "Abstract; Sec. I, Fig. 1"
+    },
+    {
+      "q": "How does T-PIVOT find the timing of an action?",
+      "a": "Frames are sampled at regular intervals from a time window, starting with the whole video, and tiled into a single image annotated with their time order. The VLM is asked which numbered frame is closest to the start of the queried action, and the window is re-centered on the selected frame and halved, repeating for a fixed number of iterations. The end time is then estimated the same way from the period after the start, and long videos can be processed in five-second intervals.",
+      "source": "Sec. III-A, III-B, III-C, Fig. 2, Algorithm 1"
+    },
+    {
+      "q": "How does the method handle a sequence of actions in one video?",
+      "a": "For task-transition estimation, start and end times for each task in a known task sequence are estimated in parallel with T-PIVOT, and each transition time is set to the midpoint between the estimated end of one task and the start of the next (Algorithm 2). Because the same action can appear more than once, the prompt lists the whole task sequence and states which numbered task is currently targeted. The prompt also asks for a short justification and a JSON answer.",
+      "source": "Sec. IV-C, IV-D, Eq. 1, Algorithm 2"
+    },
+    {
+      "q": "How well does it perform compared with other methods?",
+      "a": "On the Breakfast Dataset (335 test videos), T-PIVOT with a 5x5 grid reached MoF 60.1, IoU 40.8, and F1 51.2, compared with 36.0, 22.0, and 30.3 for a baseline that splits the video uniformly. Learning-based methods still scored higher, for example MoF 65.1 for Triplet, although they do not receive the action sequence as T-PIVOT does. On THUMOS14, T-PIVOT achieved an average mAP of 25.8, compared with 24.9 for OVTAL and 24.1 for DeTAL.",
+      "source": "Sec. IV-A, IV-E, IV-F, Table II, Table V, Table VI"
+    },
+    {
+      "q": "What are the main limitations?",
+      "a": "Performance depends on prompting hyperparameters such as grid size, number of iterations, and annotation placement, and it tends to degrade on videos with more action steps. It also depends on the VLM: with Phi-3-vision on the Breakfast Dataset, MoF, IoU, and F1 were 31.9, 18.5, and 25.4, compared with 60.1, 40.8, and 51.2 for GPT-4o. Because each localization requires multiple VLM queries, the method is slower than typical learning-based methods, which may limit real-time use.",
+      "source": "Sec. IV-E, Sec. V, Sec. V-A"
+    },
+    {
+      "q": "What settings and resources are needed to use the method?",
+      "a": "All experiments used GPT-4o, and the authors set the number of iterations to four after performance peaked within four iterations even with a 2x2 grid. The best grid size was 5x5 (25 frames per iteration) on the Breakfast Dataset and 3x3 or 4x4 on the Fine-grained Breakfast Dataset, reflecting a trade-off between temporal and spatial resolution, and center-rendered frame numbers performed worse than the original placement. Sample code is available at https://microsoft.github.io/VLM-Video-Action-Localization/.",
+      "source": "Abstract; Sec. III-B, Sec. IV-E, Tables I to IV"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

@@ -1,0 +1,38 @@
+{
+  "arxiv": "2610.07327",
+  "title": "SharedKV-BT: Node-local typed decisions for behavior-tree agents",
+  "summary": "Agents must make sequences of interdependent decisions, but autoregressive decoding is slow and typed-decision interfaces do not control when decisions are made or whether actions succeeded. SharedKV-BT lets each active behavior-tree node expose only its stage-local fields and candidates, scores those candidates in parallel by reusing a shared key-value (KV) cache of the task-state prefix, and lets external postconditions, not the model, decide progression. Across robot manipulation, navigation, and computer-use tasks, it made typed decisions 2.36-4.15 times faster than prompt-matched constrained autoregressive decoding, and on Adaptive PickPlace node-local scoring raised joint decision accuracy from 75% to 94% and closed-loop success from 0% to 60%.",
+  "faq": [
+    {
+      "q": "What is SharedKV-BT and what gap does it fill?",
+      "a": "SharedKV-BT combines a typed-decision interface, where a model fills named fields by choosing among application-defined candidates, with behavior-tree (BT) control. The paper argues that typed-decision interfaces only choose field values and do not define when a decision should be made, which candidates are valid, or whether the action succeeded, so they can act out of order, repeat actions, or stop because the model claimed success. In SharedKV-BT, each BT node defines the current stage and exposes only its valid fields and candidates, while a separate execution system and external postconditions handle execution and progression.",
+      "source": "Sec. I, Fig. 1"
+    },
+    {
+      "q": "How does Shared-KV score candidates?",
+      "a": "The instruction and observed state are encoded once as a task-state prefix, and its KV cache is reused to evaluate the candidates of all fields in one batch. Each candidate's score is the mean log probability of its own tokens given the prefix and the field prompt, which reduces preference for shorter labels and distinguishes labels that share a first token; the highest-scoring candidate in each field is selected. The authors state that these scores only rank the supplied candidates and should not be treated as reliable probabilities of correctness, and that independent fieldwise argmax does not in general guarantee cross-field compatibility.",
+      "source": "Sec. III-A"
+    },
+    {
+      "q": "What roles do stage gating and external postconditions play?",
+      "a": "The BT decides when a decision is requested and exposes only the active node's fields and candidates (stage gating). After execution, a separate evaluator checks an external postcondition from the underlying system state, and neither the model-reported completion nor the skill's return value can advance the tree. In a fixed-score policy replay at 15 saved Stack states, full BT control produced no errors, whereas removing stage gating led to out-of-order DONE selections in 10/15 states and removing the postcondition gate let the model's completion output end the task early at those same 10/15 states.",
+      "source": "Sec. III-B, Sec. IV-C"
+    },
+    {
+      "q": "What are the main quantitative results?",
+      "a": "With identical candidate batches, prefix reuse alone gave 2.09x, 1.75x, and 1.29x speedups on Stack, NavigateKitchen, and Clock, and the end-to-end comparison was 4.15x, 2.36x, and 2.38x faster than prompt-matched constrained AR (Table I). On Adaptive PickPlace, node-local Shared-KV made correct joint typed decisions in 113/120 states versus 90/120 for the global interface and 68/120 for node-local constrained AR, and completed 18/30 closed-loop episodes versus 0/30 for both alternatives. In the broader manipulation suite, SharedKV-BT completed 102/120 episodes, and SharedKV-BT completed all 12 WindowsAgentArena runs.",
+      "source": "Sec. IV-A, IV-B, IV-D, IV-G, Table I, Fig. 4"
+    },
+    {
+      "q": "What are the limitations of the approach?",
+      "a": "The experiments cover simulated robot domains and three fixed computer-use tasks, so they do not establish generalization to unseen tasks, physical hardware, or real-world perception, and some postconditions use internal simulator state not directly available to a real robot. The method assumes predefined BTs, candidate sets, compatible field combinations, skills, and postconditions, and reliable rejection remains unresolved: with an explicit ABSTAIN candidate, Shared-KV rejected 28/30 invalid cases but chose the correct value in only 17/30 valid cases. Predictions are also sensitive to candidate order, and the measured speedups depend on the models, hardware, prompt structure, candidate-set sizes, and implementation; with only two field-candidate pairs, Shared-KV was slower (0.51x).",
+      "source": "Sec. IV-A, Sec. IV-F, Sec. VI"
+    },
+    {
+      "q": "Which models, hardware, and environments were used?",
+      "a": "All primary experiments used the open-weight Qwen2.5-3B-Instruct, with Qwen3-4B in non-thinking mode as an additional robustness check on Adaptive PickPlace. Latency was measured on one NVIDIA RTX 2080 Ti GPU with 11 GB of memory using FP16 without quantization, PyTorch 2.7.1+cu126, Transformers 4.57.6, and CUDA 12.6, with two warm-up and ten measured trials. The tasks used Robosuite (Stack, full PickPlace, NutAssemblySquare, Door), RoboCasa NavigateKitchen, and the Clock, Notepad, and File Explorer tasks in WindowsAgentArena.",
+      "source": "Sec. III, Sec. III-C, Sec. III-E"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

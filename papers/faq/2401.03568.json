@@ -1,0 +1,38 @@
+{
+  "arxiv": "2401.03568",
+  "title": "Agent AI: Surveying the horizons of multimodal interaction",
+  "summary": "The survey defines Agent AI as a class of interactive systems that perceive visual, language, and other environmentally grounded data and produce meaningful embodied actions, and argues that developing agents in grounded environments can help mitigate the hallucinations of large foundation models. It proposes an agent paradigm and a unified agent transformer with agent tokens, reviews learning methods and agent categories, and surveys applications in gaming, robotics, healthcare, and multimodal and language tasks. The robotics section reviews how LLMs and VLMs are applied to manipulation, task planning, and navigation, and presents case studies including a ChatGPT and GPT-4V based task planner combined with learning-from-observation.",
+  "faq": [
+    {
+      "q": "What is Agent AI, and why does the survey argue it matters?",
+      "a": "The paper defines Agent AI as a class of interactive systems that can perceive visual stimuli, language inputs, and other environmentally grounded data and can produce meaningful embodied actions. The authors argue that developing agentic AI systems in grounded environments can mitigate the hallucinations of large foundation models and their tendency to generate environmentally incorrect outputs. They focus on representative areas, namely multimodality, gaming, robotics, and healthcare, which share concerns such as data collection, benchmarking, and ethics.",
+      "source": "Abstract, Sec. 1.3"
+    },
+    {
+      "q": "What agent paradigm and model design does the paper propose?",
+      "a": "The proposed paradigm has five main modules: environment and perception with task planning and skill observation, agent learning, memory, agent action, and cognition. Instead of connecting frozen LLM and vision submodules, the paper describes a unified agent transformer that takes visual tokens, language tokens, and a third type called agent tokens, which reserve part of the input and output space for agentic behaviors such as a robot's controller action space. Stated advantages include easier customization to actions that are hard to express in natural language, interpretability through agent-token probabilities, suitability for privacy-sensitive domains, and potentially lower cost than large proprietary models.",
+      "source": "Sec. 3, Sec. 3.2, Figs. 5-7"
+    },
+    {
+      "q": "How are LLMs and VLMs used in the robotics case study?",
+      "a": "The pipeline has two modules: task planning, in which ChatGPT receives language instructions, an environment description, a predefined robot action set, and output specifications in a few-shot prompt and returns decomposed tasks with textual descriptions; and parameterization, in which the user visually demonstrates each action. The vision system extracts affordance information from the demonstration, such as waypoints for collision avoidance, grasp types, and upper-limb postures, rather than exact motion paths, and the task sequence is executed as reusable robot skills acquired through reinforcement learning. A multimodal extension uses GPT-4V as a video analyzer and scene analyzer so that the planner can take human demonstration videos and text as input.",
+      "source": "Sec. 6.2.2, Figs. 13-17"
+    },
+    {
+      "q": "What quantitative results are reported in the robotics section?",
+      "a": "The robotics manipulation case studies are presented qualitatively, for example a VirtualHome simulation in which the task planner corrects its output from auto-generated error messages. For vision-language navigation, the paper reports that the Reinforced Cross-Modal Matching (RCM) model outperforms previous methods by 10% on SPL on a VLN benchmark. It also reports that Self-Supervised Imitation Learning (SIL) reduces the success-rate gap between seen and unseen environments from 30.7% to 11.7%.",
+      "source": "Sec. 6.2.2, Figs. 14 and 18"
+    },
+    {
+      "q": "What challenges and limitations does the paper identify for embodied agents?",
+      "a": "The paper states that LLM and VLM based foundation models still show limited performance in embodied AI, particularly in unseen environments, and that agents relying on pretrained models with limited environment-specific fine-tuning are vulnerable to hallucination. For robot skills, cues such as precise contact points and arm posture are intuitive for humans but hard to articulate in language, and executing a pre-planned action sequence purely feedforward is risky in uncontrolled domestic settings. The authors also note that current agents generally do not learn from continuous environmental interaction, and that policies trained in simulation face the sim-to-real problem and distribution-shift risks.",
+      "source": "Sec. 2, Sec. 2.2.1, Sec. 6.2, Sec. 7.4, Sec. 8, Sec. 11"
+    },
+    {
+      "q": "What does the described robot teaching system require in practice?",
+      "a": "Task planning uses ChatGPT in a few-shot manner, so it is not trained on the task, which the paper notes avoids hardware-dependent data collection and model training. Users review and adjust the textual output and then visually demonstrate each action so that the vision system can extract the predefined parameters needed for execution, after which reinforcement-learning-based robot skills carry out the tasks. The full GPT-4V prompt for the multimodal planner is available at microsoft.github.io/GPT4Vision-Robot-Manipulation-Prompts.",
+      "source": "Sec. 6.2.2, Figs. 13 and 15"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}

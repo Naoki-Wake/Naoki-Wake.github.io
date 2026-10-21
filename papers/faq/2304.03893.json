@@ -1,0 +1,38 @@
+{
+  "arxiv": "2304.03893",
+  "title": "ChatGPT empowered long-step robot control in various environments: A case application",
+  "summary": "The paper addresses how to use ChatGPT, in a few-shot setting, to translate multi-step natural-language instructions into executable robot action sequences across different household environments. It proposes customizable prompts that make ChatGPT output a JSON task plan together with an updated description of the environment, which is reused in the next planning step to reduce the burden of long conversation histories under the token limit. In a VirtualHome evaluation, 36% of plans were both executable and correct without feedback, and all 14 scenarios reached a successful sequence after several rounds of feedback.",
+  "faq": [
+    {
+      "q": "What is this paper about, and why does it matter?",
+      "a": "The paper presents practical, customizable prompts that let ChatGPT convert multi-step human instructions into sequences of user-defined robot actions. The authors note that many earlier language-based task planners are limited to narrow operations, are hardware-dependent, lack human-in-the-loop functionality, or need data recollection and retraining for new settings. Using few-shot prompting and natural-language feedback avoids extensive data collection and model retraining while allowing users to adjust the output.",
+      "source": "Abstract, Sec. I"
+    },
+    {
+      "q": "How are the prompts structured?",
+      "a": "The prompts consist of six parts: the role of ChatGPT, a definition of robot actions, rules for representing the environment, the output format, input/output examples, and the specific user instruction. The first five are loaded from fixed text files, and the sixth is generated for each instruction by filling in the instruction and environment. The authors found that ChatGPT behaved more robustly when the six prompts were given as a six-turn conversation rather than bundled into one prompt.",
+      "source": "Sec. II, Figs. 2-8"
+    },
+    {
+      "q": "How does the method handle long multi-step instructions under the token limit?",
+      "a": "ChatGPT receives the instruction plus a textual environment (assets, objects, and their states such as on_something or inside_something) and outputs a task sequence, step explanations, and the estimated environment before and after the operation. The estimated post-operation environment is reused as input for the next instruction, so the full history of prior task plans does not need to be kept in the prompt. Only the initial environment must be prepared separately, for example manually.",
+      "source": "Sec. II-C, II-D, II-F, Figs. 4, 5, 7, 8"
+    },
+    {
+      "q": "How well did it perform quantitatively?",
+      "a": "On 14 VirtualHome kitchen scenarios, plans generated without feedback succeeded (executable and judged correct) in about 36% of cases (5 of 14 scenarios), with minimal variation across five trials. With an automatic feedback system simulating a knowledgeable user, all 14 scenarios reached a successful sequence after 0 to 3 rounds of feedback. The post-operation environment was estimated accurately in all 14 scenarios and five trials, and the authors note the 36% rate is comparable to 35.23% reported by Huang et al.",
+      "source": "Sec. III-C, Tables II-III, Sec. IV"
+    },
+    {
+      "q": "What limitations do the authors discuss?",
+      "a": "The prompts assume a robot with at least one arm, sufficient degrees of freedom and reachability, and instructions at the granularity of grasp-manipulation-release. The initial environment description must be prepared, the approach assumes static environments where only the robot causes changes, and the token limit is mitigated but not eliminated, which may restrict how long an instruction can be. Observed failure patterns included incorrect verb selection and omission of necessary steps, such as opening a container before placing an object inside it.",
+      "source": "Sec. II, Sec. III-C2, Sec. IV-C, Sec. V-A, V-B"
+    },
+    {
+      "q": "What model was used, and can the prompts be reproduced?",
+      "a": "The experiments used a fixed gpt-3.5-turbo model provided through Azure OpenAI. All prompts, source code, parameters, instructions, and environment definitions are published at https://github.com/microsoft/ChatGPT-Robot-Manipulation-Prompts, and the authors state they can be tried through OpenAI's API or a web browser. The action set and state list are meant to be customized to the user's robot system, as was done for the VirtualHome experiments.",
+      "source": "Sec. II, Sec. II-B, II-C, Sec. III"
+    }
+  ],
+  "status": "AI-drafted from the paper text; not yet reviewed by the author."
+}
